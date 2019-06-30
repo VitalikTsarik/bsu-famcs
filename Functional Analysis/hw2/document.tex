@@ -1,0 +1,232 @@
+
+\documentclass[oneside, final, 11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T2A]{fontenc}
+\usepackage[russian]{babel}
+
+\usepackage{natbib}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{xcolor}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage[document]{ragged2e}
+\usepackage[paper=a4paper, margin=2cm, bottom=2cm]{geometry}
+
+\begin{document}
+\begin{titlepage}
+	
+	
+	\newgeometry{margin=1cm}
+	
+	\centerline{\large \bf МИНИСТЕРСТВО ОБРАЗОВАНИЯ РЕСПУБЛИКИ БЕЛАРУСЬ}
+	\bigskip
+	\bigskip
+	\centerline{\large \bf БЕЛОРУССКИЙ ГОСУДАРСТВЕННЫЙ УНИВЕРСИТЕТ}
+	\bigskip
+	\bigskip
+	\centerline{\large \bf ФАКУЛЬТЕТ ПРИКЛАДНОЙ МАТЕМАТИКИ И ИНФОРМАТИКИ}
+	\vfill
+	\vfill
+	\vfill
+	\centerline{\Large \bf ФУНКЦИОНАЛЬНЫЙ АНАЛИЗ}
+	\bigskip
+	\bigskip
+	\vfill
+	\begin{centering}
+		{\large
+			Домашняя работа №2\\
+			студента 2 курса 2 группы \\}
+	\end{centering}
+	\centerline{\large \bf Царика Виталия Александровича}
+	\vfill
+	\vfill
+	\hfill
+	\begin{minipage}{0.25\textwidth}
+		{\large{\bf Преподаватель} \\
+			{\it Дайняк Виктор \\ Владимирович}}
+	\end{minipage}
+	\vfill
+	\vfill
+	\centerline{\Large \bf Минск 2019}
+	
+\end{titlepage}
+
+\restoregeometry
+\section{162-169}
+	Можно ли в нормированном пространстве $\mathbb{R}$ принять за норму элемента $x$:
+
+	\begin{enumerate}
+		\item[162.] $f(x) = \sqrt{x}$
+		
+		$f(x)$ неопределена для всех $x \in \mathbb{R}$
+		
+		Ответ: нет
+		
+		\item[163.] $f(x) = \sqrt{|x|}$
+				
+		$||\lambda x|| = \sqrt{|\lambda x|} = \sqrt{|\lambda|} \sqrt{|x|} = \sqrt{|\lambda|} ||x|| \neq |\lambda|||x||$
+		
+		не выполнена вторая аксиома
+		
+		Ответ: нет
+		
+		\item[164.] $f(x) = |x-1|$
+				
+		$||0|| = |0 - 1| = 1 \neq 0 $ 
+		
+		не выполнена первая аксиома
+		
+		Ответ: нет
+		
+		\item[165.] $f(x) = \sqrt{x^2}$
+		
+		$f(x) = \sqrt{x^2} = |x|$
+				
+		$f(x) = |x|$ - стандартная норма пространства действительных чисел
+		
+		Ответ: да
+		
+		\item[166.] $f(x) = 5|x|$
+				
+		1) $||x|| = 0 \Leftrightarrow 5|x| = 0 \Leftrightarrow x = 0$
+		
+		2) $||\lambda x|| = 5|\lambda x| = |\lambda|5|x| = |\lambda| ||x||$
+		
+		3) $||x + y|| = 5|x + y| \leq 5|x| + 5|y| = ||x|| + ||y||$
+		
+		Ответ: да
+		
+		\item[167.] $f(x) = x^2$
+				
+		$||\lambda x|| = (\lambda x)^2 = \lambda^2 x^2 = \lambda^2 ||x|| \neq |\lambda|||x||$
+		
+		не выполнена вторая аксиома
+		
+		Ответ: нет
+		
+		\item[168.] $f(x) = |\arctan{x}|$
+				
+		$||2 * 1|| = |\arctan{2}| = 0.4142... \neq \frac{\pi}{2} = |2| |\arctan{1}| = |2|||1|| $
+		
+		не выполнена вторая аксиома
+		
+		Ответ: нет
+		
+		\item[169.] $f(x) = \ln{|x|}$
+		
+		$||1|| = \ln{1} = 0 $
+		
+		не выполнена первая аксиома
+		
+		Ответ: нет
+		
+	\end{enumerate}
+
+\section{170-175}
+	Можно ли в нормированном пространстве векторов на плоскости принять за норму элемента $a = (x, y)$:
+
+	\begin{enumerate}
+		\item[170.] $f(a) = \sqrt{|xy|}$
+		
+		$a = (0, 1) $
+		
+		$||a|| = \sqrt{|0*1|} = 0$
+		
+		не выполнена первая аксиома
+				
+		Ответ: нет
+		
+		\item[171.] $f(a) = |x| + |y|$
+		
+		1) $||a|| = 0 \Leftrightarrow |x| + |y| = 0 \Leftrightarrow a = (0, 0)$
+		
+		2) $||\lambda a|| = |\lambda x| + |\lambda y| = |\lambda|(|x| + |y|) = |\lambda| ||a||$
+		
+		3) $||a + b|| = |x_1 + x_2| + |y_1 + y_2| \leq |x_1|+ |x_2| + |y_1| +|y_2| = ||a|| + ||a||$
+		
+		Ответ: да
+		
+		\item[172.] $f(a) = max(|x|, |y|)$
+		
+		$a = (3, 2), b = (2, 1)$
+		
+		$||a + b|| = ||(5, 3)|| = 5$
+		
+		$||a|| + ||b|| = 3 + 2 = 5$
+		
+		не выполнена третья аксиома
+		
+		Ответ: нет
+		
+		\item[173.] $f(a) = \sqrt{x^2 + y^2} + \sqrt{xy}$
+		
+		Не определена для все векторов. Например, для $a = (1, -1)$
+		
+		Ответ: нет
+		
+		\item[174.] $f(a) = |x^2 - y^2|$
+		
+		$||(1, 1)|| = |1 - 1| = 0$
+		
+		Не выполнена первая аксиома
+		
+		Ответ: нет
+		
+	\end{enumerate}
+
+
+\section{176-180}
+	Можно ли в линейном пространстве дифференцируемых на $[a, b]$ функций принять за норму элемента $x(t)$:
+
+	\begin{enumerate}
+		\item[176.] $max_{t \in [a,b]}|x(t)|$
+		
+		1) $max_{t \in [a,b]}|x(t)| = 0 \Leftrightarrow |x(t)| \leq 0 \Leftrightarrow x(t) = 0$
+		
+		2) $||\lambda x(t)|| = max_{t \in [a,b]}|\lambda x(t)| = |\lambda| max_{t \in [a,b]}|x(t)| = |\lambda| ||x(t)||$
+		
+		3) $||x(t) + y(t)|| = max_{t \in [a,b]}|x(t) + y(t)| \leq max_{t \in [a,b]}|x(t)| + max_{t \in [a,b]}|x(y)| = ||x(t)|| + ||y(t)||$
+		
+		Ответ: да
+		
+		\item[177.] $max_{t \in [a,b]}|x'(t)|$
+		
+		$ x(t) = 1$
+		
+		$ ||x(t)|| = max_{t \in [a,b]}|0| = 0 $
+		
+		Не выполнена первая теорема
+		
+		Ответ: нет
+		
+		\item[178.] $|x(b) - x(a)| + max_{t \in [a,b]}|x'(t)|$
+		
+		$ x(t) = 1$
+		
+		$ ||x(t)|| = |1 - 1| + max_{t \in [a,b]}|0| = 0 $
+		
+		не выполнена первая аксиома
+		
+		Ответ: нет
+		
+		\item[179.] $|x(b) - x(a)| + max_{t \in [a,b]}|x'(t)|$
+		
+		$ x(t) = 1$
+		
+		$ ||x(t)|| = |1 - 1| + max_{t \in [a,b]}|0| = 0 $
+		
+		Ответ: нет
+		
+		\item[180.] $|x(a)| + max_{t \in [a,b]}|x'(t)|$
+		
+		$||\lambda x(t)|| = |x(a)| + max_{t \in [a,b]}|(\lambda x(t))'| =  |x(a)| + |\lambda| max_{t \in [a,b]}|x(t)'| \neq |\lambda| (|x(a)| + max_{t \in [a,b]}|x(t)'|) = |\lambda| ||x(t)||$
+		
+		Не выполнена вторая аксиома
+		
+		Ответ: нет
+		
+	\end{enumerate}
+	
+
+\end{document}
