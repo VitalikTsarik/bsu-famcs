@@ -1,0 +1,4 @@
+cmake-build-debug
+release
+venv
+/reports/.ipynb_checkpoints/
