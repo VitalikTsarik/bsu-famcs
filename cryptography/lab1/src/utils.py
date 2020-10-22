@@ -15,9 +15,7 @@ LETTERS_REGEXPS = {
 TABLE_COLS = [
     'text length',
     'keyword',
-    '- len',
-    'found keyword',
-    '- len',
+    'length',
     'success'
 ]
 
@@ -89,12 +87,12 @@ def print_table_row(*args):
 def print_table_head(title):
     report.write('## {}\n'.format(title))
     print_table_row(*TABLE_COLS)
-    print_table_row(*['---'] * 6)
+    print_table_row(*['---'] * len(TABLE_COLS))
 
 
 def print_test(text_len, keyword, found_keyword):
     percent = count_percent(keyword, found_keyword)
-    print_table_row(text_len, keyword, len(keyword), found_keyword, len(found_keyword), '{}%'.format(percent))
+    print_table_row(text_len, keyword, len(keyword), f'{percent}%')
     return percent
 
 
