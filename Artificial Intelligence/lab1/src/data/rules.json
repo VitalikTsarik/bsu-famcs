@@ -1,0 +1,270 @@
+[
+  {
+    "if": [
+      {
+        "attr": "diet",
+        "value": "omnivore"
+      },
+      {
+        "attr": "period",
+        "value": "Triassic"
+      }
+    ],
+    "then": {
+      "attr": "region",
+      "value": "Europe"
+    }
+  },
+  {
+    "if": [
+      {
+        "attr": "diet",
+        "value": "omnivore"
+      },
+      {
+        "attr": "period",
+        "value": "Jurassic"
+      }
+    ],
+    "then": {
+      "attr": "region",
+      "value": "Europe"
+    }
+  },
+  {
+    "if": [
+      {
+        "attr": "diet",
+        "value": "carnivore"
+      },
+      {
+        "attr": "region",
+        "value": "Asia"
+      }
+    ],
+    "then": {
+      "attr": "period",
+      "value": "Cretaceous"
+    }
+  },
+  {
+    "if": [
+      {
+        "attr": "diet",
+        "value": "carnivore"
+      },
+      {
+        "attr": "period",
+        "value": "Jurassic"
+      },
+      {
+        "attr": "region",
+        "value": "America"
+      }
+    ],
+    "then": {
+      "attr": "dinosaur",
+      "value": "Edmarka"
+    }
+  },
+  {
+    "if": [
+      {
+        "attr": "diet",
+        "value": "omnivore"
+      },
+      {
+        "attr": "period",
+        "value": "Triassic"
+      },
+      {
+        "attr": "region",
+        "value": "Europe"
+      }
+    ],
+    "then": {
+      "attr": "dinosaur",
+      "value": "Asylosaurus"
+    }
+  },
+  {
+    "if": [
+      {
+        "attr": "diet",
+        "value": "herbivore"
+      },
+      {
+        "attr": "period",
+        "value": "Cretaceous"
+      },
+      {
+        "attr": "region",
+        "value": "America"
+      }
+    ],
+    "then": {
+      "attr": "dinosaur",
+      "value": "Pitekunsaurus"
+    }
+  },
+  {
+    "if": [
+      {
+        "attr": "diet",
+        "value": "carnivore"
+      },
+      {
+        "attr": "period",
+        "value": "Cretaceous"
+      },
+      {
+        "attr": "region",
+        "value": "America"
+      }
+    ],
+    "then": {
+      "attr": "dinosaur",
+      "value": "Tyrannosaurus"
+    }
+  },
+  {
+    "if": [
+      {
+        "attr": "diet",
+        "value": "herbivore"
+      },
+      {
+        "attr": "period",
+        "value": "Cretaceous"
+      },
+      {
+        "attr": "region",
+        "value": "America"
+      }
+    ],
+    "then": {
+      "attr": "dinosaur",
+      "value": "Triceratops"
+    }
+  },
+  {
+    "if": [
+      {
+        "attr": "diet",
+        "value": "carnivore"
+      },
+      {
+        "attr": "period",
+        "value": "Cretaceous"
+      },
+      {
+        "attr": "region",
+        "value": "Asia"
+      }
+    ],
+    "then": {
+      "attr": "dinosaur",
+      "value": "Velociraptor"
+    }
+  },
+  {
+    "if": [
+      {
+        "attr": "diet",
+        "value": "herbivore"
+      },
+      {
+        "attr": "period",
+        "value": "Jurassic"
+      },
+      {
+        "attr": "region",
+        "value": "Europe"
+      }
+    ],
+    "then": {
+      "attr": "dinosaur",
+      "value": "Stegosaurus"
+    }
+  },
+  {
+    "if": [
+      {
+        "attr": "diet",
+        "value": "carnivore"
+      },
+      {
+        "attr": "period",
+        "value": "Cretaceous"
+      },
+      {
+        "attr": "region",
+        "value": "Europe"
+      }
+    ],
+    "then": {
+      "attr": "dinosaur",
+      "value": "Spinosaurus"
+    }
+  },
+  {
+    "if": [
+      {
+        "attr": "diet",
+        "value": "carnivore"
+      },
+      {
+        "attr": "period",
+        "value": "Jurassic"
+      },
+      {
+        "attr": "region",
+        "value": "Europe"
+      }
+    ],
+    "then": {
+      "attr": "dinosaur",
+      "value": "Archaeopteryx"
+    }
+  },
+  {
+    "if": [
+      {
+        "attr": "diet",
+        "value": "herbivore"
+      },
+      {
+        "attr": "period",
+        "value": "Jurassic"
+      },
+      {
+        "attr": "region",
+        "value": "America"
+      }
+    ],
+    "then": {
+      "attr": "dinosaur",
+      "value": "Brachiosaurus"
+    }
+  },
+  {
+    "if": [
+      {
+        "attr": "diet",
+        "value": "omnivore"
+      },
+      {
+        "attr": "period",
+        "value": "Jurassic"
+      },
+      {
+        "attr": "region",
+        "value": "Europe"
+      }
+    ],
+    "then": {
+      "attr": "dinosaur",
+      "value": "Ornithocheirus"
+    }
+  }
+]

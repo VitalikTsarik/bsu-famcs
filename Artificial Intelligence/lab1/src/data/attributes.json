@@ -1,0 +1,41 @@
+[
+  {
+    "name": "diet",
+    "values": [
+      "herbivore",
+      "carnivore",
+      "omnivore"
+    ]
+  },
+  {
+    "name": "period",
+    "values": [
+      "Triassic",
+      "Jurassic",
+      "Cretaceous"
+    ]
+  },
+  {
+    "name": "region",
+    "values": [
+      "America",
+      "Europe",
+      "Asia"
+    ]
+  },
+  {
+    "name": "dinosaur",
+    "values": [
+      "Edmarka",
+      "Asylosaurus",
+      "Pitekunsaurus",
+      "Tyrannosaurus",
+      "Triceratops",
+      "Velociraptor",
+      "Stegosaurus",
+      "Archaeopteryx",
+      "Brachiosaurus",
+      "Ornithocheirus"
+    ]
+  }
+]
