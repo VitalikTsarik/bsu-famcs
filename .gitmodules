@@ -1,0 +1,9 @@
+[submodule "Natural Language Processing"]
+	path = "Natural Language Processing"
+	url = https://github.com/VitalikTsarik/linguistic-knowledge-base
+[submodule "Computer Security/lab2"]
+	path = "Computer Security/lab2"
+	url = https://github.com/VitalikTsarik/secure-notepad
+[submodule "Scientific Work/3 course/repo"]
+	path = "Scientific Work/3 course/repo"
+	url = https://github.com/VitalikTsarik/mara2
