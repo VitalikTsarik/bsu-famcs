@@ -1,0 +1,106 @@
+--Лабораторная выполняется в СУБД  Oracle. 
+--Cкопируйте файл  EDU5.txt  в каталог C:\TEMP .
+--Раскройте файл и ознакомтесь со скриптом создания и заполнения таблиц для выполнения лабораторной. 
+--Произведите запуск Oracle.  Запустите скрипты EDU5.txt на выполнение.
+--Вставте в эту строку Ваши ФИО, номер группы, курса. ФИО Царик Виталий Александрович, группа 2, курс 4.      
+--Файл с отчётом о выполнении лабораторной создаётся путём вставки скриптов, созданных Вами программ после пунктов 1-6.
+--Файл отчёта именуется фамилией студента  в английской транскрипции, с расширением .txt и сохраняется в каталог.                  .
+
+--1. Создайте триггер, который при обновлении записи в таблице EMP 
+-- должен отменять действие и сообщать об ошибке
+-- a) если семейное положение сотрудника холост/одинокая (s) изменяется на семейное положение разведен/разведена (d); 
+-- b) семейное положение женат/замужем (m) изменяется  на семейное положение холост/одинокая (s);
+CREATE OR REPLACE TRIGGER trigger_task1
+BEFORE UPDATE ON emp
+FOR EACH ROW
+BEGIN
+  IF :old.mstat = 's' AND :new.mstat = 'd' 
+  THEN RAISE_APPLICATION_ERROR(-20000, 'can not change marrige status from single to divorced');
+  END IF;
+
+  IF :old.mstat = 'm' AND :new.mstat = 's' 
+  THEN RAISE_APPLICATION_ERROR(-20001, 'can not change marrige status from married to single');
+  END IF;
+END;
+
+--2. Создайте триггер, который при добавлении или обновлении записи в таблице EMP должен:
+-- a) осуществлять вставку данного равного 0,
+-- если для сотрудника с семейным положением холост/одинокая (s)  в столбце Nchild указывается данное, отличное от 0;
+-- b) осуществлять вставку данного NULL,
+-- если для любого сотрудника указывается отрицательное количество детей.
+CREATE OR REPLACE TRIGGER trigger_task2
+AFTER INSERT OR UPDATE ON emp
+FOR EACH ROW
+BEGIN
+  IF :new.mstat = 's' AND :new.nchild != 0 
+  THEN UPDATE emp
+    SET nchild = 0
+    WHERE empno = :new.empno;
+  END IF;
+
+  IF :new.mstat = 's' AND :new.nchild < 0 
+  THEN UPDATE emp
+    SET nchild = NULL
+    WHERE empno = :new.empno;
+  END IF;
+END;
+
+--3. Создайте триггер, который при обновлении записи в таблице EMP 
+-- должен отменять действие и сообщать об ошибке, если для сотрудников, находящихся в браке (m) в столбце Nchild 
+-- новое значение увеличивается (рождение ребёнка) или уменьшается (достижение ребёнком совершеннолетия) более чем на 1.
+CREATE OR REPLACE TRIGGER trigger_task3
+BEFORE UPDATE ON emp FOR EACH ROW
+BEGIN
+  IF (:new.mstat = 'm' AND ABS(:new.nchild - :old.nchild) > 1)
+  THEN RAISE_APPLICATION_ERROR(-20000, 'new_nchild - old_nchild must be <1');
+  END IF;
+END;
+
+--4. Создать триггер, который отменяет любые действия (начисление, изменение, удаление) с премиями (таблица bonus) 
+-- неработающих в настоящий момент в организации сотрудников и сообщает об ошибке.
+CREATE OR REPLACE TRIGGER trigger_task4
+BEFORE INSERT OR UPDATE OR DELETE ON bonus
+FOR EACH ROW
+DECLARE
+  careers INTEGER;
+BEGIN
+  SELECT COUNT(*) into careers FROM career
+  WHERE empno = :new.empno and enddate IS NULL;
+
+  IF careers = 0
+  THEN RAISE_APPLICATION_ERROR(-20000, 'employe does not work at the company anymore');
+  END IF;
+END;
+
+--5. Создайте триггер, который после выполнения действия (вставка, обновление, удаление) с таблицей job
+-- создаёт запись в таблице temp_table, с указанием названия действия (delete, update, insert) активизирующего триггер.
+CREATE OR REPLACE TRIGGER trigger_task5
+AFTER INSERT OR UPDATE OR DELETE ON job
+FOR EACH ROW
+BEGIN
+  IF INSERTING
+  THEN INSERT INTO temp_table VALUES('insert');
+  END IF;
+
+  IF UPDATING
+  THEN INSERT INTO temp_table VALUES('update');
+  END IF;
+
+  IF DELETING
+  THEN INSERT INTO temp_table values('delete');
+  END IF;
+END;
+
+--6. Создайте триггер, который до выполнения обновления в таблице job столбца minsalary отменяет действие, сообщает об ошибке
+-- и создаёт запись в таблице temp_table c указанием "более 10%",
+-- если должностной оклад изменяется более чем 10% (увеличивается или уменьшается). 
+CREATE OR REPLACE TRIGGER trigger_task6
+BEFORE UPDATE ON job
+FOR EACH ROW
+BEGIN
+  IF :new.minsalary NOT BETWEEN :old.minsalary * 0.9 AND :old.minsalary * 1.1
+  THEN 
+    INSERT INTO temp_table VALUES('более 10%');
+    RAISE_APPLICATION_ERROR(-20000, 'more than 10%');
+  END IF;
+END;

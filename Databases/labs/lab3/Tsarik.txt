@@ -1,0 +1,193 @@
+--лабораторная выполняется в СУБД  Oracle. 
+--Скопируйте файлы EDU3.txt  в каталог C:\TEMP .
+--Раскройте файл и ознакомтесь со скриптом создания и заполнения таблиц для выполнения лабораторной. Таблица Bonus имеет дополнительный столбец tax (налог) со значениями null.  
+--Произведите запуск SQLPlus, PLSQLDeveloper или другого инструментария Oracle и соеденитесь с БД.  Запустите скрипты EDU3.txt на выполнение.
+--Вставте в эту строку Ваши ФИО, номер группы, курса. ФИО Царик Виталий Александрович, группа 2, курс 4.      
+--Файл с отчётом о выполнении лабораторной создаётся путём вставки скриптов, созданных Вами программ после пунктов 1a), 1b), 1c), 2), 3).
+--Файл отчёта именуется фамилией студента  в английской транскрипции, с расширением .txt и сохраняется в cbcntvt edufpmi.bsu.by      .                   .
+--Вам необходимо создать ананимные блоки (программы) для начисления налога на прибыль и занесения его в соответсвующую запись таблицы Bonus.
+--Налог вычисляется по следующему правилу: 
+--налог равен 10% от начисленной  в месяце премии, если суммарная премия с начала года до конца рассматриваемого месяца не превышает 600;
+--налог равен 13% от начисленной  в месяце премии, если суммарная премия с начала года до конца рассматриваемого месяца больше 600, но не превышает 1100;
+--налог равен 15% от начисленной  в месяце премии, если суммарная премия с начала года до конца рассматриваемого месяца  больше 1100.
+
+--1.	Составьте программу вычисления налога и вставки его в таблицу Bonus:
+--a) с помощью простого цикла (loop) с курсором, оператора if или опретора case;
+CREATE OR REPLACE PROCEDURE task1a IS
+  CURSOR bonusCursor IS
+  SELECT bonuscopy.empno,
+         bonuscopy.month,
+         bonuscopy.year,
+         sum(bonus.bonvalue) AS sumbonvalue
+  FROM bonus bonuscopy
+  JOIN bonus ON bonus.empno = bonuscopy.empno
+  AND bonus.year = bonuscopy.year
+  AND bonus.month <= bonuscopy.month
+  GROUP BY bonuscopy.empno,
+           bonuscopy.month,
+           bonuscopy.year;
+
+  i bonusCursor % ROWTYPE;
+  taxPercent REAL := 0;
+
+  BEGIN OPEN bonusCursor;
+    LOOP FETCH bonusCursor INTO i;
+      EXIT WHEN bonusCursor % NOTFOUND;
+      IF i.sumbonvalue <= 600 THEN taxPercent := 0.10;
+      ELSIF i.sumbonvalue <= 1100 THEN taxPercent := 0.13;
+      ELSE taxPercent := 0.15;
+      END IF;
+
+      UPDATE bonus
+      SET tax = bonvalue * taxPercent
+      WHERE empno = i.empno
+        AND YEAR = i.year
+        AND MONTH = i.month;
+    END LOOP;
+  CLOSE bonusCursor;
+END task1a;
+
+-- b)   с помощью курсорного цикла FOR;
+CREATE OR REPLACE PROCEDURE task1b IS
+  CURSOR bonusCursor IS
+  SELECT bonuscopy.empno,
+         bonuscopy.month,
+         bonuscopy.year,
+         sum(bonus.bonvalue) AS sumbonvalue
+  FROM bonus bonuscopy
+  JOIN bonus ON bonus.empno = bonuscopy.empno
+  AND bonus.year = bonuscopy.year
+  AND bonus.month <= bonuscopy.month
+  GROUP BY bonuscopy.empno,
+           bonuscopy.month,
+           bonuscopy.year;
+
+  taxPercent REAL := 0;
+
+  BEGIN
+  FOR i IN bonusCursor LOOP
+    IF i.sumbonvalue <= 600 THEN taxPercent := 0.10;
+    ELSIF i.sumbonvalue <= 1100 THEN taxPercent := 0.13;
+    ELSE taxPercent := 0.15;
+    END IF;
+
+    UPDATE bonus
+    SET tax = bonvalue * taxPercent
+    WHERE empno = i.empno
+      AND YEAR = i.year
+      AND MONTH = i.month;
+  END LOOP;
+END task1b;
+
+-- c) с помощью курсора с параметром, передавая номер сотрудника, для которого необходимо посчитать налог. 
+CREATE OR REPLACE PROCEDURE task1c(employee IN INTEGER) IS
+  CURSOR bonusCursor (employee INTEGER) IS
+  SELECT bonuscopy.empno,
+         bonuscopy.month,
+         bonuscopy.year,
+         sum(bonus.bonvalue) AS sumbonvalue
+  FROM bonus bonuscopy
+  JOIN bonus ON bonus.empno = bonuscopy.empno
+  AND bonus.year = bonuscopy.year
+  AND bonus.month <= bonuscopy.month
+  WHERE bonuscopy.empno = employee
+  GROUP BY bonuscopy.empno,
+           bonuscopy.month,
+           bonuscopy.year;
+
+  i bonusCursor % ROWTYPE;
+  taxPercent REAL := 0;
+  BEGIN OPEN bonusCursor(employee);
+    LOOP FETCH bonusCursor INTO i;
+      EXIT WHEN bonusCursor % NOTFOUND;
+
+      IF i.sumbonvalue <= 600 THEN taxPercent := 0.10;
+      ELSIF i.sumbonvalue <= 1100 THEN taxPercent := 0.13;
+      ELSE taxPercent := 0.15;
+      END IF;
+
+      UPDATE bonus
+      SET tax = bonvalue * taxPercent
+      WHERE empno = i.empno
+        AND YEAR = i.year
+        AND MONTH = i.month;
+    END LOOP;
+  CLOSE bonusCursor;
+END task1c;
+
+--2.   Создайте процедуру, вычисления налога и вставки его в таблицу Bonus за всё время начислений для конкретного сотрудника. В качестве параметров передать проценты налога (до 500, от 501 до 1000, выше 1000), номер сотрудника.
+CREATE OR REPLACE PROCEDURE task2(taxPercent1 IN REAL, taxPercent2 IN REAL, taxPercent3 IN REAL, employee IN INTEGER) IS
+  CURSOR bonusCursor (employee INTEGER) IS
+  SELECT bonuscopy.empno,
+         bonuscopy.month,
+         bonuscopy.year,
+         sum(bonus.bonvalue) AS sumbonvalue
+  FROM bonus bonuscopy
+  JOIN bonus ON bonus.empno = bonuscopy.empno
+  AND bonus.year = bonuscopy.year
+  AND bonus.month <= bonuscopy.month
+  WHERE bonuscopy.empno = employee
+  GROUP BY bonuscopy.empno,
+           bonuscopy.month,
+           bonuscopy.year;
+
+  i bonusCursor % ROWTYPE;
+  taxPercent REAL := 0;
+
+  BEGIN OPEN bonusCursor(employee);
+    LOOP FETCH bonusCursor INTO i;
+      EXIT WHEN bonusCursor % NOTFOUND;
+      IF i.sumbonvalue <= 600 THEN taxPercent := taxPercent1;
+      ELSIF i.sumbonvalue <= 1100 THEN taxPercent := taxPercent2;
+      ELSE taxPercent := taxPercent3;
+      END IF;
+
+      UPDATE bonus
+      SET tax = bonvalue * taxPercent
+      WHERE empno = i.empno
+        AND YEAR = i.year
+        AND MONTH = i.month;
+    END LOOP;
+  CLOSE bonusCursor;
+END task2;
+
+--3.   Создайте функцию, вычисляющую суммарный налог на премию сотрудника за всё время начислений. В качестве параметров передать процент налога (до 500, от 501 до 100 , выше 1000), номер сотрудника.
+-- Возвращаемое значение – суммарный налог.
+CREATE OR REPLACE FUNCTION task3(taxPercent1 IN REAL, taxPercent2 IN REAL, taxPercent3 IN REAL, employee IN INTEGER) RETURN REAL IS
+  CURSOR bonusCursor (employee INTEGER) IS
+  SELECT bonuscopy.empno,
+         bonuscopy.month,
+         bonuscopy.year,
+         sum(bonus.bonvalue) AS sumbonvalue,
+         avg(bonus.bonvalue) AS avgbonvalue
+  FROM bonus bonuscopy
+  JOIN bonus ON bonus.empno = bonuscopy.empno
+  AND bonus.year = bonuscopy.year
+  AND bonus.month <= bonuscopy.month
+  WHERE bonuscopy.empno = employee
+  GROUP BY bonuscopy.empno,
+           bonuscopy.month,
+           bonuscopy.year;
+
+  i bonusCursor % ROWTYPE;
+  taxPercent REAL := 0;
+  total REAL := 0;
+
+  BEGIN OPEN bonusCursor (employee);
+    LOOP FETCH bonusCursor INTO i;
+      EXIT WHEN bonusCursor % NOTFOUND;
+      IF i.sumbonvalue <= 600 THEN taxPercent := taxPercent1;
+      ELSIF i.sumbonvalue <= 1100 THEN taxPercent := taxPercent2;
+      ELSE taxPercent := taxPercent3;
+      END IF;
+      total := total + i.avgbonvalue * taxPercent;
+    END LOOP;
+  CLOSE bonusCursor;
+  RETURN total;
+END task3;
+ 
+
+
+
+  
+    

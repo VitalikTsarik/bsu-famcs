@@ -1,0 +1,121 @@
+--Лабораторная выполняется в СУБД  Oracle. 
+--Cкопируйте файл  edu8.txt  в каталог C:\TEMP .
+--Раскройте файл и ознакомтесь со скриптом создания и заполнения таблиц для выполнения лабораторной. 
+--Запустите скрипт edu8.sql на выполнение.
+--Вставте в эту строку Ваши ФИО, номер группы, курса. ФИО Царик Виталий Александрович, группа 2, курс 4.      
+--Файл с отчётом о выполнении лабораторной создаётся путём вставки скриптов, созданных 
+--Вами операторов после пунктов 1- 9.
+--Файл отчёта именуется фамилией студента  в английской транскрипции, с расширением .txt 
+--и сохраняется в каталог.
+
+--1.	Создайте таблицу emp_tel, с полями empno, phone_num. Первое из них - поле идентичное полю empno 
+--таблицы emp и служит внешним ключом для связывания таблиц emp и emp_tel. 
+--Второе поле – массив переменной длины с максимальным числом элементов равным четырём. 
+--Поле может содержать телефоны сотрудника (рабочий, МТС, Велком, Лайф). 
+
+create or replace type phone_num_ty as varray(4) of varchar2(20);
+/
+create table emp_tel (
+    empno integer not null references emp(empno), 
+    phone_num phone_num_ty
+);
+
+--2.	Вставьте записи в таблицу  emp_tel со следующими данными:
+--505, 2203415, 80297121314, 80296662332, Null
+--303, 2240070, 80297744543, 80296667766, 80443345543
+--503, 2233014, Null, 80296171717, 80443161612
+--104, 22333015, 80297654321, Null, 90443939398
+
+insert into emp_tel values(505, phone_num_ty('2203415', '80297121314', '80296662332', null));
+insert into emp_tel values(303, phone_num_ty('2240070', '80297744543', '80296667766', '80443345543'));
+insert into emp_tel values(503, phone_num_ty('2233014', null, '80296171717', '80443161612'));
+insert into emp_tel values(104, phone_num_ty('22333015', '80297654321', null, '90443939398'));
+
+--3.	Создайте запросы:
+--a)	 для сотрудников с номерами 104, 303 указать имена и номера телефонов;
+
+select emp.empname, emp_tel.phone_num
+from emp_tel
+join emp on emp.empno = emp_tel.empno
+where emp.empno IN (104, 303);
+
+--b)	для сотрудника с номером 505, используя функцию Table, укажите его номер и телефоны.
+
+select emp_tel.empno, column_value
+from emp_tel, table(phone_num)
+where emp_tel.empno = 505;
+
+--4.	Создайте таблицу children с полями empno, child. 
+--Первое из них - поле идентичное полю empno таблицы emp и служит внешним ключом для связывания 
+--таблиц emp и children. Второе является вложенной таблицей и содержит данные об имени (name) 
+--и дате рождения ребёнка (birthdate) сотрудника.
+
+create or replace type clild_ty as object (
+    name varchar(80),
+    birthdate DATE);
+/
+create type clild_table_ty is table of clild_ty;
+/
+create table children (
+    empno number not null references emp(empno), 
+    child clild_table_ty
+) nested table child store as child_table;
+
+--5.	Вставьте в таблицу children записи:
+--для сотрудника с номером 102 двое детей: Jack, 02.02.2009
+--				               Mari, 10.11.2014;
+
+insert into children values(102,
+    clild_table_ty(
+        clild_ty('Jack', to_date('02-02-2009','dd-mm-yyyy')), 
+        clild_ty('Mari', to_date('10-11-2014','dd-mm-yyyy'))
+    )
+);
+
+--для сотрудника с номером 327 двое детей: Alex, 22.09.2015
+--						Janis, 04.10.2018.
+
+insert into children values(327,
+    clild_table_ty(
+        clild_ty('Alex', to_date('22-09-2015','dd-mm-yyyy')), 
+        clild_ty('Janis', to_date('04-10-2018','dd-mm-yyyy'))
+    )
+);
+
+--6.	Создайте запросы:
+--a)	укажите все сведения из таблицы children;
+
+select empno, child.*
+from children, table(children.child) child;
+
+--b)	укажите номер сотрудника, имеющего ребёнка с именем Janis, имя ребёнка и дату рождения ребёнка.
+
+select empno, child.*
+from children, table(children.child) child
+where name = 'Janis';
+
+--7.	Измените дату рождения ребёнка с именем Alex на 10.10.2016.
+
+update table (select child
+   from children, table(child) child
+   where child.name = 'Alex'
+)
+set birthdate = to_date('10-10-2016', 'dd-mm-yyyy')
+where name = 'Alex';
+
+--8.	Добавьте для сотрудника с номером 102 ребёнка с именем Julio и датой рождения 01.12.2019.
+
+insert into table (select child
+   from children
+   where empno = 102 
+)
+values (clild_ty('Julio', to_date('01-12-2019','dd-mm-yyyy')));
+
+--9.	Удалите сведения о ребёнке с именем Mari для сотрудника с номером 102.	
+
+delete from table (select child
+   from children
+   where empno = 102
+) child
+where child.name = 'Mari';
+	
